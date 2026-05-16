@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Target U - منح دراسية وفرص عمل</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Welcome Page (تظهر مرة واحدة) -->
+    <div id="welcomePage" class="page">
+        <div class="welcome-container">
+            <h1 class="welcome-title">Target U</h1>
+            <p class="welcome-subtitle">منصتك الأولى للمنح الدراسية وفرص العمل</p>
+            <div class="welcome-features">
+                <div class="feature">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>منح دراسية</h3>
+                    <p>اكتشف أحدث المنح الدراسية حول العالم</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>فرص عمل</h3>
+                    <p>اعثر على أفضل فرص العمل المناسبة لك</p>
+                </div>
+                <div class="feature">
+                    <i class="fas fa-comments"></i>
+                    <h3>مجتمع تفاعلي</h3>
+                    <p>تواصل مع خبراء ومتخصصين في مجالك</p>
+                </div>
+            </div>
+            <button onclick="proceedToLogin()" class="btn-primary">ابدأ الآن</button>
+        </div>
+    </div>
+
+    <!-- Login/Register Page -->
+    <div id="authPage" class="page hidden">
+        <div class="auth-container">
+            <div class="auth-tabs">
+                <button class="tab-btn active" onclick="showLoginForm()">تسجيل الدخول</button>
+                <button class="tab-btn" onclick="showRegisterForm()">إنشاء حساب</button>
+            </div>
+            
+            <!-- Login Form -->
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label>رقم الهاتف</label>
+                    <input type="tel" id="loginPhone" placeholder="أدخل رقم الهاتف" required>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required>
+                </div>
+                <button type="submit" class="btn-primary">دخول</button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form hidden">
+                <div class="form-group">
+                    <label>الاسم الكامل</label>
+                    <input type="text" id="regName" placeholder="أدخل اسمك الكامل" required>
+                </div>
+                <div class="form-group">
+                    <label>العمر</label>
+                    <input type="number" id="regAge" placeholder="أدخل عمرك" min="16" max="100" required>
+                </div>
+                <div class="form-group">
+                    <label>النوع</label>
+                    <select id="regGender" required>
+                        <option value="">اختر النوع</option>
+                        <option value="male">ذكر</option>
+                        <option value="female">أنثى</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>رقم الهاتف</label>
+                    <input type="tel" id="regPhone" placeholder="أدخل رقم الهاتف" required>
+                </div>
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="regPassword" placeholder="أدخل كلمة المرور" required>
+                </div>
+                <div class="form-group">
+                    <label>الصورة الشخصية</label>
+                    <input type="file" id="regPhoto" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>الوصف الشخصي</label>
+                    <textarea id="regBio" placeholder="اكتب وصفاً عن نفسك..." rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn-primary">إنشاء حساب</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Page (المنح والفرص) -->
+    <div id="mainPage" class="page hidden">
+        <nav class="main-nav">
+            <h2>Target U</h2>
+            <div class="nav-buttons">
+                <button onclick="navigateTo('opportunities')" class="nav-btn active">
+                    <i class="fas fa-bullhorn"></i> المنح والفرص
+                </button>
+                <button onclick="navigateTo('chat')" class="nav-btn">
+                    <i class="fas fa-comments"></i> الدردشة
+                </button>
+                <button onclick="navigateTo('profile')" class="nav-btn">
+                    <i class="fas fa-user"></i> الملف الشخصي
+                </button>
+            </div>
+        </nav>
+
+        <div id="opportunitiesPage" class="sub-page">
+            <div class="opportunities-header">
+                <h3>المنح الدراسية وفرص العمل</h3>
+                <button onclick="showNewPostModal()" class="btn-primary" id="newPostBtn">
+                    <i class="fas fa-plus"></i> إضافة منشور
+                </button>
+            </div>
+            <div id="opportunitiesList" class="opportunities-list"></div>
+        </div>
+
+        <div id="chatPage" class="sub-page hidden">
+            <div class="chat-container">
+                <div class="chat-sidebar">
+                    <div class="chat-search">
+                        <input type="text" id="roomSearch" placeholder="ابحث عن غرفة برقم ID...">
+                        <button onclick="searchRoom()"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="rooms-list">
+                        <div class="room-item active" onclick="joinGeneralChat()">
+                            <i class="fas fa-globe"></i> الدردشة العامة
+                        </div>
+                        <div id="vipRoomsList"></div>
+                    </div>
+                    <button onclick="createNewRoom()" class="btn-secondary" id="createRoomBtn">
+                        <i class="fas fa-plus"></i> إنشاء غرفة جديدة
+                    </button>
+                </div>
+                <div class="chat-main">
+                    <div class="chat-header">
+                        <h4 id="currentRoomName">الدردشة العامة</h4>
+                        <span id="roomId" class="room-id"></span>
+                    </div>
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input">
+                        <div class="input-actions">
+                            <label for="fileInput" class="file-label">
+                                <i class="fas fa-paperclip"></i>
+                            </label>
+                            <input type="file" id="fileInput" multiple style="display: none;">
+                            <button onclick="startVoiceRecord()" class="voice-btn">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <button onclick="createPoll()" class="poll-btn" id="pollBtn">
+                                <i class="fas fa-poll"></i>
+                            </button>
+                        </div>
+                        <textarea id="messageInput" placeholder="اكتب رسالتك..." rows="2"></textarea>
+                        <button onclick="sendMessage()" class="btn-send">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="profilePage" class="sub-page hidden">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <img id="profilePhoto" src="assets/default-avatar.png" alt="الصورة الشخصية" class="profile-photo">
+                    <div class="profile-info">
+                        <h3 id="profileName"></h3>
+                        <p id="profileBio"></p>
+                        <span id="profileGender" class="gender-badge"></span>
+                    </div>
+                    <button onclick="toggleSettings()" class="settings-btn">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                </div>
+                
+                <div id="settingsMenu" class="settings-menu hidden">
+                    <button onclick="toggleTheme()" class="settings-item">
+                        <i class="fas fa-moon"></i> تبديل الوضع (فاتح/داكن)
+                    </button>
+                    <button onclick="showVipRegistration()" class="settings-item">
+                        <i class="fas fa-crown"></i> إنشاء حساب مميز
+                    </button>
+                    <button onclick="logout()" class="settings-item logout-btn">
+                        <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                    </button>
+                </div>
+
+                <div id="vipStats" class="vip-stats hidden">
+                    <div class="stat-card">
+                        <i class="fas fa-paper-plane"></i>
+                        <span id="postsCount">0</span>
+                        <p>المنشورات</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-door-open"></i>
+                        <span id="roomsCount">0</span>
+                        <p>الغرف</p>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-users"></i>
+                        <span id="subscribersCount">0</span>
+                        <p>المشتركون</p>
+                    </div>
+                </div>
+
+                <div class="profile-edit">
+                    <h4>تعديل المعلومات</h4>
+                    <div class="form-group">
+                        <label>تغيير الصورة</label>
+                        <input type="file" id="editPhoto" accept="image/*">
+                    </div>
+                    <div class="form-group">
+                        <label>الاسم</label>
+                        <input type="text" id="editName">
+                    </div>
+                    <div class="form-group">
+                        <label>الوصف</label>
+                        <textarea id="editBio" rows="3"></textarea>
+                    </div>
+                    <button onclick="updateProfile()" class="btn-primary">حفظ التغييرات</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Page (مخفية) -->
+    <div id="adminPage" class="page hidden">
+        <div class="admin-container">
+            <h2>لوحة التحكم - المدير</h2>
+            <div class="admin-tabs">
+                <button onclick="showAdminTab('users')" class="admin-tab active">المستخدمين</button>
+                <button onclick="showAdminTab('rooms')" class="admin-tab">الغرف</button>
+                <button onclick="showAdminTab('codes')" class="admin-tab">الرموز</button>
+            </div>
+            
+            <div id="usersTab" class="admin-tab-content">
+                <div class="admin-search">
+                    <input type="text" id="userSearch" placeholder="ابحث عن مستخدم...">
+                </div>
+                <div id="usersList" class="admin-list"></div>
+            </div>
+            
+            <div id="roomsTab" class="admin-tab-content hidden">
+                <div id="adminRoomsList" class="admin-list"></div>
+            </div>
+            
+            <div id="codesTab" class="admin-tab-content hidden">
+                <div class="codes-management">
+                    <h3>إدارة الرموز المميزة</h3>
+                    <div class="add-code-form">
+                        <input type="text" id="newVipCode" placeholder="أدخل رمز جديد">
+                        <button onclick="addVipCode()" class="btn-primary">إضافة رمز</button>
+                    </div>
+                    <div id="codesList" class="codes-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for New Post -->
+    <div id="newPostModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>إضافة منشور جديد</h3>
+            <div class="form-group">
+                <label>العنوان</label>
+                <input type="text" id="postTitle" placeholder="عنوان المنحة أو الفرصة">
+            </div>
+            <div class="form-group">
+                <label>النوع</label>
+                <select id="postType">
+                    <option value="scholarship">منحة دراسية</option>
+                    <option value="job">فرصة عمل</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>المحتوى</label>
+                <textarea id="postContent" rows="5" placeholder="تفاصيل المنحة أو الفرصة..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button onclick="addNewPost()" class="btn-primary">نشر</button>
+                <button onclick="closeModal()" class="btn-secondary">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reply Modal -->
+    <div id="replyModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>الرد على الرسالة</h3>
+            <div id="originalMessage" class="original-message"></div>
+            <textarea id="replyContent" rows="3" placeholder="اكتب ردك..."></textarea>
+            <div class="modal-actions">
+                <button onclick="sendReply()" class="btn-primary">إرسال الرد</button>
+                <button onclick="closeReplyModal()" class="btn-secondary">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Poll Modal -->
+    <div id="pollModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>إنشاء استطلاع رأي</h3>
+            <div class="form-group">
+                <label>السؤال</label>
+                <input type="text" id="pollQuestion" placeholder="أدخل سؤال الاستطلاع">
+            </div>
+            <div id="pollOptions">
+                <div class="form-group">
+                    <label>الخيار 1</label>
+                    <input type="text" class="poll-option">
+                </div>
+                <div class="form-group">
+                    <label>الخيار 2</label>
+                    <input type="text" class="poll-option">
+                </div>
+            </div>
+            <button onclick="addPollOption()" class="btn-secondary">إضافة خيار</button>
+            <div class="modal-actions">
+                <button onclick="submitPoll()" class="btn-primary">إنشاء الاستطلاع</button>
+                <button onclick="closePollModal()" class="btn-secondary">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/telegram-storage.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/admin.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

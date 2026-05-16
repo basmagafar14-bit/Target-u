@@ -1,0 +1,13 @@
+target-u/
+├── index.html
+├── css/
+│   └── style.css
+├── js/
+│   ├── config.js
+│   ├── telegram-storage.js
+│   ├── auth.js
+│   ├── main.js
+│   ├── chat.js
+│   └── admin.js
+├── config.json
+└── assets/
